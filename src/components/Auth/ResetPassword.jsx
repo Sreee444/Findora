@@ -3,7 +3,9 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { verifyResetToken, resetPasswordWithToken } from "../../services/api";
 
 export default function ResetPassword() {
+  console.log("ResetPassword component loaded"); // Debug log
   const { token } = useParams();
+  console.log("Token from URL:", token); // Debug log
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
