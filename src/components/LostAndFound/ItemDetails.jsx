@@ -32,16 +32,26 @@ export default function ItemDetails({ itemId }) {
   if (!item) return <div>Item not found.</div>;
 
   return (
-    <div className="item-details p-4">
-      <h2 className="text-xl font-bold mb-2">{item.title}</h2>
-      <div className="mb-2 text-gray-700">{item.description}</div>
-      <div className="mb-2 text-sm text-gray-500">Reported by: {item.createdBy?.username || "Unknown"}</div>
-      <div className="mb-2 text-sm text-gray-500">Date: {item.date ? new Date(item.date).toLocaleString() : "N/A"}</div>
+    <div className="item-details p-4 max-w-2xl mx-auto">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 space-y-4">
+        <h2 className="text-xl font-bold mb-2 text-gray-800 dark:text-white">{item.title}</h2>
+        <div className="text-gray-700 dark:text-gray-300 leading-relaxed">{item.description}</div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+          <div className="bg-gray-50 dark:bg-gray-700 rounded-md p-3">
+            <span className="font-medium text-gray-600 dark:text-gray-300">👤 Reported by:</span>
+            <div className="text-gray-800 dark:text-white">{item.createdBy?.username || "Unknown"}</div>
+          </div>
+          <div className="bg-gray-50 dark:bg-gray-700 rounded-md p-3">
+            <span className="font-medium text-gray-600 dark:text-gray-300">📅 Date:</span>
+            <div className="text-gray-800 dark:text-white">{item.date ? new Date(item.date).toLocaleString() : "N/A"}</div>
+          </div>
+        </div>
       {item.location ? (
         <div className="my-4">
-          <div className="font-semibold mb-1">Location:</div>
+          <div className="font-semibold mb-2 text-gray-800 dark:text-gray-200">📍 Location:</div>
           <div 
-            className="cursor-pointer relative group"
+            className="cursor-pointer relative group mb-3"
             onClick={() => {
               const googleMapsUrl = `https://www.google.com/maps?q=${item.location.lat},${item.location.lng}`;
               window.open(googleMapsUrl, '_blank');
@@ -55,37 +65,44 @@ export default function ItemDetails({ itemId }) {
               </div>
             </div>
           </div>
-          <div className="text-xs text-gray-600 mt-1">
-            <button
-              onClick={() => {
-                const googleMapsUrl = `https://www.google.com/maps?q=${item.location.lat},${item.location.lng}`;
-                window.open(googleMapsUrl, '_blank');
-              }}
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline cursor-pointer transition-colors"
-              title="Open coordinates in Google Maps"
-            >
-              ({item.location.lat}, {item.location.lng})
-            </button>
+          
+          {/* Mobile-friendly location info */}
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Coordinates:</span>
+              <button
+                onClick={() => {
+                  const googleMapsUrl = `https://www.google.com/maps?q=${item.location.lat},${item.location.lng}`;
+                  window.open(googleMapsUrl, '_blank');
+                }}
+                className="text-sm bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-2 py-1 rounded hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+                title="Open coordinates in Google Maps"
+              >
+                🗺️ View on Map
+              </button>
+            </div>
+            
             {item.location.address && (
-              <span className="ml-2">
-                - 
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-2">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-1">Address:</span>
                 <button
                   onClick={() => {
                     const googleMapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(item.location.address)}`;
                     window.open(googleMapsUrl, '_blank');
                   }}
-                  className="ml-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline cursor-pointer transition-colors"
+                  className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors text-left"
                   title="Search address in Google Maps"
                 >
                   {item.location.address}
                 </button>
-              </span>
+              </div>
             )}
           </div>
         </div>
       ) : (
         <div className="italic text-gray-400">No location set for this item.</div>
       )}
+      </div>
     </div>
   );
 }

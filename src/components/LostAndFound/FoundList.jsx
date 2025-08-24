@@ -47,33 +47,31 @@ export default function FoundList() {
                 <div className="text-xs text-gray-500 dark:text-gray-400">Reported by: {item.createdBy?.username || 'Unknown'}</div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">Date: {item.date ? new Date(item.date).toLocaleString() : 'N/A'}</div>
                 {item.location && (
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    📍 Location: 
-                    <button
-                      onClick={() => {
-                        const googleMapsUrl = `https://www.google.com/maps?q=${item.location.lat},${item.location.lng}`;
-                        window.open(googleMapsUrl, '_blank');
-                      }}
-                      className="ml-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline cursor-pointer transition-colors"
-                      title="Open in Google Maps"
-                    >
-                      {item.location.lat?.toFixed(4)}, {item.location.lng?.toFixed(4)}
-                    </button>
+                  <div className="text-xs mt-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-md p-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-yellow-700 dark:text-yellow-300 font-medium">📍 Location:</span>
+                      <button
+                        onClick={() => {
+                          const googleMapsUrl = `https://www.google.com/maps?q=${item.location.lat},${item.location.lng}`;
+                          window.open(googleMapsUrl, '_blank');
+                        }}
+                        className="text-xs bg-yellow-600 hover:bg-yellow-700 text-white px-2 py-1 rounded transition-colors"
+                        title="Open in Google Maps"
+                      >
+                        🗺️ View Map
+                      </button>
+                    </div>
                     {item.location.address && (
-                      <span className="ml-1">
-                        (
-                        <button
-                          onClick={() => {
-                            const googleMapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(item.location.address)}`;
-                            window.open(googleMapsUrl, '_blank');
-                          }}
-                          className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline cursor-pointer transition-colors"
-                          title="Search address in Google Maps"
-                        >
-                          {item.location.address}
-                        </button>
-                        )
-                      </span>
+                      <button
+                        onClick={() => {
+                          const googleMapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(item.location.address)}`;
+                          window.open(googleMapsUrl, '_blank');
+                        }}
+                        className="text-xs text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-300 transition-colors mt-1 block truncate"
+                        title="Search address in Google Maps"
+                      >
+                        {item.location.address}
+                      </button>
                     )}
                   </div>
                 )}

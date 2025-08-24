@@ -21,8 +21,8 @@ export default function MapView({ lat, lng }) {
     <MapContainer
       center={[lat, lng]}
       zoom={16}
-      style={{ width: "100%", height: 240, borderRadius: "1rem", boxShadow: "0 6px 24px #0002" }}
-      className="overflow-hidden"
+      style={{ width: "100%", height: "300px", borderRadius: "0.75rem", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
+      className="overflow-hidden map-container"
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
