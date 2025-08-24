@@ -30,6 +30,7 @@ app.get("/", (req, res) => {
   res.json({ 
     message: "Gotcha Lost & Found API", 
     status: "running",
+    version: "2.1.0", // Updated version to trigger Railway redeploy
     timestamp: new Date().toISOString()
   });
 });
