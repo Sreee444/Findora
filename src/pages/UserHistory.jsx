@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { formatDateTimeIST } from "../utils/helpers";
 const API_URL = import.meta.env.VITE_API_URL || 'https://gotcha-bn3z.onrender.com';
 
 
@@ -97,7 +98,7 @@ export default function UserHistory() {
                       <div className="font-semibold text-blue-800 dark:text-blue-200 flex items-center gap-2">
                         <span>❓</span> {item.title}
                       </div>
-                      <div className="text-xs text-gray-500 mb-1">{item.date ? new Date(item.date).toLocaleString() : 'N/A'}</div>
+                      <div className="text-xs text-gray-500 mb-1">{formatDateTimeIST(item.date)}</div>
                       <div className="text-gray-700 dark:text-gray-200 text-sm mb-1">{item.description}</div>
                       <div className="text-xs text-gray-400 mb-1">Contact: {item.contact}</div>
                       <div className="text-xs font-semibold mb-1">
@@ -135,7 +136,7 @@ export default function UserHistory() {
                       <div className="font-semibold text-green-800 dark:text-green-200 flex items-center gap-2">
                         <span>✔️</span> {item.title}
                       </div>
-                      <div className="text-xs text-gray-500 mb-1">{item.date ? new Date(item.date).toLocaleString() : 'N/A'}</div>
+                      <div className="text-xs text-gray-500 mb-1">{formatDateTimeIST(item.date)}</div>
                       <div className="text-gray-700 dark:text-gray-200 text-sm mb-1">{item.description}</div>
                       <div className="text-xs text-gray-400 mb-1">Contact: {item.contact}</div>
                       <div className="text-xs font-semibold mb-1">

@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import '../../styles/map.css';
 import L from 'leaflet';
 
 // Fix default marker icon issue in Leaflet with Webpack/Vite
@@ -11,27 +12,66 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
-function LocationMarker({ onLocationSelect, position, setPosition }) {
+function LocationMarker({ onLocationSelect, position, setPosition, setSelectedAddress }) {
+  // Function to get address from coordinates
+  const getAddressFromCoords = async (lat, lng) => {
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`);
+      const data = await response.json();
+      if (data && data.display_name) {
+        return data.display_name;
+      }
+    } catch (error) {
+      console.log('Could not fetch address:', error);
+    }
+    return '';
+  };
+
   useMapEvents({
-    click(e) {
+    async click(e) {
       setPosition(e.latlng);
-      onLocationSelect({ lat: e.latlng.lat, lng: e.latlng.lng });
+      const addressText = await getAddressFromCoords(e.latlng.lat, e.latlng.lng);
+      setAddress(addressText);
+      setSelectedAddress(addressText);
+      onLocationSelect({ 
+        lat: e.latlng.lat, 
+        lng: e.latlng.lng,
+        address: addressText 
+      });
     },
   });
   return position ? <Marker position={position} /> : null;
 }
 
-export default function MapPicker({ onLocationSelect, zoom = 2, center = [20, 0] }) {
+export default function MapPicker({ onLocationSelect, zoom = 6, center = [28.6139, 77.2090] }) {
   const [position, setPosition] = useState(null);
+  const [selectedAddress, setSelectedAddress] = useState('');
   const mapRef = useRef();
 
   const handleCurrentLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
+        async (pos) => {
           const { latitude, longitude } = pos.coords;
           setPosition({ lat: latitude, lng: longitude });
-          onLocationSelect({ lat: latitude, lng: longitude });
+          
+          // Get address for current location
+          try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`);
+            const data = await response.json();
+            const addressText = data && data.display_name ? data.display_name : '';
+            
+            onLocationSelect({ 
+              lat: latitude, 
+              lng: longitude,
+              address: addressText 
+            });
+            setSelectedAddress(addressText);
+          } catch (error) {
+            console.log('Could not fetch address:', error);
+            onLocationSelect({ lat: latitude, lng: longitude });
+          }
+          
           if (mapRef.current) {
             mapRef.current.setView([latitude, longitude], 16);
           }
@@ -47,6 +87,7 @@ export default function MapPicker({ onLocationSelect, zoom = 2, center = [20, 0]
 
   const handleDeleteLocation = () => {
     setPosition(null);
+    setSelectedAddress('');
     onLocationSelect(null);
   };
 
@@ -77,20 +118,44 @@ export default function MapPicker({ onLocationSelect, zoom = 2, center = [20, 0]
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
         />
-        <LocationMarker onLocationSelect={onLocationSelect} position={position} setPosition={setPosition} />
+        <LocationMarker onLocationSelect={onLocationSelect} position={position} setPosition={setPosition} setSelectedAddress={setSelectedAddress} />
       </MapContainer>
       <div className="flex flex-col items-center mt-3">
         <div className="text-xs text-blue-800 text-center font-semibold tracking-wide mb-2">
           Click on the map to select a location.
         </div>
         {position && (
-          <button
-            type="button"
-            onClick={handleDeleteLocation}
-            className="px-4 py-1 bg-red-500 text-white rounded-full hover:bg-red-600 text-xs font-semibold shadow border-2 border-red-300 hover:border-red-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-300"
-          >
-            Delete Location
-          </button>
+          <div className="text-center mb-2">
+            <div className="text-xs text-blue-800 font-semibold">Selected Location:</div>
+            <div className="text-xs text-gray-600">{position.lat.toFixed(6)}, {position.lng.toFixed(6)}</div>
+            {selectedAddress && (
+              <div className="text-xs text-gray-700 mt-1 px-2 py-1 bg-blue-50 rounded border max-w-full break-words">
+                {selectedAddress}
+              </div>
+            )}
+          </div>
+        )}
+        {position && (
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                const googleMapsUrl = `https://www.google.com/maps?q=${position.lat},${position.lng}`;
+                window.open(googleMapsUrl, '_blank');
+              }}
+              className="px-3 py-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 text-xs font-semibold shadow border-2 border-blue-300 hover:border-blue-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-300"
+              title="View in Google Maps"
+            >
+              🗺️ View in Maps
+            </button>
+            <button
+              type="button"
+              onClick={handleDeleteLocation}
+              className="px-4 py-1 bg-red-500 text-white rounded-full hover:bg-red-600 text-xs font-semibold shadow border-2 border-red-300 hover:border-red-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-300"
+            >
+              Delete Location
+            </button>
+          </div>
         )}
       </div>
     </div>

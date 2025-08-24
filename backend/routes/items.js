@@ -44,15 +44,27 @@ router.get("/", async (req, res) => {
   res.json(items);
 });
 
+// Get single item by ID
+router.get("/:id", async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id)
+      .populate("createdBy", "username")
+      .populate("claimedBy", "username");
+    if (!item) return res.status(404).json({ error: "Item not found" });
+    res.json(item);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch item" });
+  }
+});
+
 // Add new item (auth required)
 router.post("/", auth, async (req, res) => {
-  const { title, description, type, date, contact } = req.body;
+  const { title, description, type, contact, location } = req.body;
 
   if (
     !title || title.length < 3 ||
     !description || description.length < 10 ||
     !["lost", "found"].includes(type) ||
-    !date ||
     !contact
   ) {
     return res.status(400).json({ error: "Validation error" });
@@ -62,8 +74,9 @@ router.post("/", auth, async (req, res) => {
     title,
     description,
     type,
-    date,
+    date: new Date(), // Always use current timestamp when item is created
     contact,
+    location,
     createdBy: req.user.id
   });
   await item.save();
@@ -94,6 +107,27 @@ router.post("/:id/claim", auth, async (req, res) => {
   item.claimedBy = req.user.id;
   await item.save();
   res.json({ message: "Item claimed" });
+});
+
+// Update item location (auth required)
+router.put("/:id/location", auth, async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) return res.status(404).json({ error: "Item not found" });
+    
+    // Check if user owns this item
+    if (item.createdBy.toString() !== req.user.id) {
+      return res.status(403).json({ error: "Not authorized to update this item" });
+    }
+
+    const { location } = req.body;
+    item.location = location;
+    await item.save();
+    
+    res.json({ message: "Location updated successfully", item });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to update location" });
+  }
 });
 
 export default router;

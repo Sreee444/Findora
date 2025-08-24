@@ -71,7 +71,7 @@ export const sendWelcomeEmail = async (userEmail, username) => {
             <!-- Getting Started -->
             <div style="text-align: center; margin-bottom: 25px;">
               <p style="color: #6b7280; margin-bottom: 20px;">Ready to get started? Log in to your account and begin helping our community!</p>
-              <a href="http://localhost:5174/login" 
+              <a href="${process.env.FRONTEND_URL || 'https://gotcha-rosy.vercel.app'}/login" 
                  style="background-color: #14b8a6; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
                 Go to Gotcha App
               </a>
@@ -112,7 +112,7 @@ What you can do:
 - Get Notifications: Receive alerts when matching items are posted
 - Track Your Posts: Monitor the status of your reports
 
-Ready to get started? Log in at: http://localhost:5174/login
+Ready to get started? Log in at: ${process.env.FRONTEND_URL || 'https://gotcha-rosy.vercel.app'}/login
 
 Pro Tips:
 - Include clear photos when posting items
@@ -164,7 +164,7 @@ export const sendMatchNotificationEmail = async (userEmail, itemTitle, matchType
               }
             </p>
             <div style="text-align: center; margin: 25px 0;">
-              <a href="http://localhost:5174/dashboard" 
+              <a href="${process.env.FRONTEND_URL || 'https://gotcha-rosy.vercel.app'}/user/dashboard" 
                  style="background-color: #14b8a6; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold;">
                 Check Your Dashboard
               </a>

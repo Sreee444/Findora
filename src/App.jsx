@@ -30,12 +30,14 @@ import FoundForm from './components/LostAndFound/FoundForm';
 import LostList from './components/LostAndFound/LostList';
 import FoundList from './components/LostAndFound/FoundList';
 import ItemDetails from './components/LostAndFound/ItemDetails';
+import ItemDetailsPage from './pages/ItemDetailsPage';
 import ApprovalQueue from './components/Admin/ApprovalQueue';
 import UserManagement from './components/Admin/UserManagement';
 import Notification from './components/Notifications/Notification';
 import EmailNotification from './components/Notifications/EmailNotification';
 import PushNotification from './components/Notifications/PushNotification';
 import LocationUpdate from './components/Location/LocationUpdate';
+import LocationPage from './components/Location/LocationPage';
 import MapView from './components/Location/MapView';
 import DashboardAccessPage from './pages/DashboardAccessPage';
 
@@ -79,11 +81,11 @@ export default function App() {
                     <Route path="/found" element={<ProtectedRoute element={<FoundForm />} />} />
                     <Route path="/lost-list" element={<ProtectedRoute element={<LostList />} />} />
                     <Route path="/found-list" element={<ProtectedRoute element={<FoundList />} />} />
-                    <Route path="/item/:id" element={<ItemDetails />} />
+                    <Route path="/item/:id" element={<ItemDetailsPage />} />
                     <Route path="/notifications" element={<Notification message="Sample notification" />} />
                     <Route path="/email-notification" element={<EmailNotification to="test@example.com" subject="Test" body="Hello" />} />
                     <Route path="/push-notification" element={<PushNotification message="Push notification!" />} />
-                    <Route path="/location-update" element={<LocationUpdate />} />
+                    <Route path="/location-update" element={<LocationPage />} />
                     <Route path="/map-view" element={<MapView />} />
                     <Route path="/dashboard-access" element={<DashboardAccessPage />} />
                     <Route path="*" element={<NotFound />} />
