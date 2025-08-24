@@ -22,6 +22,7 @@ import ResetPassword from '../components/Auth/ResetPassword';
 // ...existing code...
 
 export default function AppRoutes() {
+  console.log("AppRoutes component rendered, current location:", window.location.pathname); // Debug log
   const [admin, setAdmin] = useState(() => {
     const adminUser = localStorage.getItem('gotcha_admin');
     return adminUser ? JSON.parse(adminUser) : null;
