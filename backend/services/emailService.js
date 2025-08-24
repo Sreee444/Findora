@@ -186,4 +186,79 @@ export const sendMatchNotificationEmail = async (userEmail, itemTitle, matchType
   }
 };
 
-export default { sendWelcomeEmail, sendMatchNotificationEmail };
+// Send password reset email
+export const sendPasswordResetEmail = async (userEmail, username, resetToken) => {
+  try {
+    const transporter = createTransporter();
+    const resetUrl = `${process.env.FRONTEND_URL || 'https://gotcha-rosy.vercel.app'}/reset-password/${resetToken}`;
+    
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: userEmail,
+      subject: '🔐 Gotcha - Password Reset Request',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <!-- Header -->
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h1 style="color: #14b8a6; margin: 0; font-size: 2.5em;">🔍 Gotcha</h1>
+              <p style="color: #6b7280; margin: 5px 0 0 0; font-size: 1.1em;">Lost & Found Community</p>
+            </div>
+            
+            <!-- Reset Message -->
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h2 style="color: #374151; margin-bottom: 15px;">Password Reset Request 🔐</h2>
+              <p style="color: #6b7280; font-size: 1.1em; line-height: 1.6;">
+                Hi ${username || 'there'}! We received a request to reset your password for your Gotcha account.
+              </p>
+            </div>
+            
+            <!-- Reset Button -->
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${resetUrl}" style="display: inline-block; background-color: #14b8a6; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 1.1em;">
+                Reset My Password
+              </a>
+            </div>
+            
+            <!-- Instructions -->
+            <div style="background-color: #fef3c7; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+              <p style="color: #92400e; margin: 0; font-size: 0.95em; line-height: 1.5;">
+                <strong>⚠️ Important:</strong><br>
+                • This link will expire in 1 hour<br>
+                • If you didn't request this reset, you can safely ignore this email<br>
+                • For security, never share this link with anyone
+              </p>
+            </div>
+            
+            <!-- Alternative Link -->
+            <div style="text-align: center; margin: 20px 0;">
+              <p style="color: #6b7280; font-size: 0.9em; margin-bottom: 10px;">
+                If the button doesn't work, copy and paste this link:
+              </p>
+              <p style="color: #14b8a6; font-size: 0.85em; word-break: break-all; background-color: #f3f4f6; padding: 10px; border-radius: 4px;">
+                ${resetUrl}
+              </p>
+            </div>
+            
+            <!-- Footer -->
+            <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+              <p style="color: #6b7280; font-size: 0.85em; margin: 0;">
+                This email was sent to ${userEmail}<br>
+                © 2025 Gotcha - Lost & Found Community
+              </p>
+            </div>
+          </div>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`Password reset email sent to ${userEmail}`);
+    return { success: true };
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+export default { sendWelcomeEmail, sendMatchNotificationEmail, sendPasswordResetEmail };
