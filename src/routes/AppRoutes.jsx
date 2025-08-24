@@ -18,6 +18,7 @@ import LoginRegisterPrompt from '../pages/LoginRegisterPrompt';
 // import LostFoundAccessPage from '../pages/LostFoundAccessPage';
 import { useAuth } from '../context/AuthContext';
 import ForgotPasswordPage from '../pages/ForgotPassword';
+import ResetPassword from '../components/Auth/ResetPassword';
 // ...existing code...
 
 export default function AppRoutes() {
@@ -48,6 +49,7 @@ export default function AppRoutes() {
   <Route path="/admin/login" element={<AdminLogin onLogin={setAdmin} />} />
   <Route path="/admin" element={admin ? <AdminPage /> : <Navigate to="/admin/login" replace />} />
   <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+  <Route path="/reset-password/:token" element={<ResetPassword />} />
   <Route path="/history" element={user ? <UserHistory /> : <LoginRegisterPrompt />} />
   {/* <Route path="/lostfound-access" element={<LostFoundAccessPage />} /> */}
   <Route path="*" element={<NotFound />} />

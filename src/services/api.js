@@ -90,6 +90,41 @@ export async function submitItem(itemData) {
   return await response.json();
 }
 
+// Forgot password - request reset email
+export async function forgotPassword(email) {
+  const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to send reset email');
+  }
+  return await response.json();
+}
+
+// Verify reset token
+export async function verifyResetToken(token) {
+  const response = await fetch(`${API_URL}/api/auth/verify-reset-token/${token}`);
+  if (!response.ok) {
+    throw new Error('Invalid or expired reset token');
+  }
+  return await response.json();
+}
+
+// Reset password with token
+export async function resetPasswordWithToken(token, newPassword) {
+  const response = await fetch(`${API_URL}/api/auth/reset-password-with-token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, newPassword }),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to reset password');
+  }
+  return await response.json();
+}
+
 export async function login(email, password) {
   const response = await fetch(`${API_URL}/api/auth/login`, {
     method: 'POST',
