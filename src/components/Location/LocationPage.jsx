@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import '../../styles/map.css';
 import L from 'leaflet';
 
 // Fix default marker icon issue in Leaflet with Webpack/Vite
@@ -81,10 +82,18 @@ export default function LocationPage() {
     </div>
   );
 
-  // Default center (you can adjust this based on your preference)
+  // Default center - you can change this to your preferred location
+  // Common locations: 
+  // New York: [40.7128, -74.0060]
+  // London: [51.5074, -0.1278]
+  // Tokyo: [35.6762, 139.6503]
+  // India (Delhi): [28.6139, 77.2090]
+  // US Center: [39.8283, -98.5795]
   const defaultCenter = items.length > 0 
     ? [items[0].location.lat, items[0].location.lng]
-    : [40.7128, -74.0060]; // Default to New York
+    : [28.6139, 77.2090]; // Default to Delhi, India - change this to your preferred location
+
+  const defaultZoom = items.length > 0 ? 10 : 6;
 
   return (
     <div className="space-y-6">
@@ -139,43 +148,51 @@ export default function LocationPage() {
             
             {/* Map */}
             <div className="rounded-lg overflow-hidden shadow-lg">
-              <MapContainer
-                center={defaultCenter}
-                zoom={10}
-                style={{ width: '100%', height: '500px' }}
-                className="rounded-lg"
-              >
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
-                />
-                {filteredItems.map(item => (
-                  <Marker
-                    key={item._id}
-                    position={[item.location.lat, item.location.lng]}
-                    icon={item.type === 'lost' ? lostIcon : foundIcon}
-                  >
-                    <Popup>
-                      <div className="space-y-2">
-                        <h3 className="font-bold text-lg">{item.title}</h3>
-                        <p className="text-sm text-gray-600">{item.description}</p>
-                        <div className="text-xs space-y-1">
-                          <div className={`inline-block px-2 py-1 rounded text-white ${
-                            item.type === 'lost' ? 'bg-blue-600' : 'bg-green-600'
-                          }`}>
-                            {item.type === 'lost' ? 'Lost Item' : 'Found Item'}
+              {typeof window !== 'undefined' ? (
+                <MapContainer
+                  center={defaultCenter}
+                  zoom={defaultZoom}
+                  style={{ width: '100%', height: '500px' }}
+                  className="rounded-lg map-container"
+                  key={`map-${filteredItems.length}`} // Force re-render when items change
+                >
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
+                    maxZoom={19}
+                  />
+                  {filteredItems.map(item => (
+                    <Marker
+                      key={item._id}
+                      position={[item.location.lat, item.location.lng]}
+                      icon={item.type === 'lost' ? lostIcon : foundIcon}
+                    >
+                      <Popup>
+                        <div className="space-y-2">
+                          <h3 className="font-bold text-lg">{item.title}</h3>
+                          <p className="text-sm text-gray-600">{item.description}</p>
+                          <div className="text-xs space-y-1">
+                            <div className={`inline-block px-2 py-1 rounded text-white ${
+                              item.type === 'lost' ? 'bg-blue-600' : 'bg-green-600'
+                            }`}>
+                              {item.type === 'lost' ? 'Lost Item' : 'Found Item'}
+                            </div>
+                            <div>📅 {new Date(item.date).toLocaleDateString()}</div>
+                            <div>👤 {item.createdBy?.username || 'Unknown'}</div>
+                            {item.location.address && (
+                              <div className="text-gray-500">📍 {item.location.address}</div>
+                            )}
                           </div>
-                          <div>📅 {new Date(item.date).toLocaleDateString()}</div>
-                          <div>👤 {item.createdBy?.username || 'Unknown'}</div>
-                          {item.location.address && (
-                            <div className="text-gray-500">📍 {item.location.address}</div>
-                          )}
                         </div>
-                      </div>
-                    </Popup>
-                  </Marker>
-                ))}
-              </MapContainer>
+                      </Popup>
+                    </Marker>
+                  ))}
+                </MapContainer>
+              ) : (
+                <div className="flex items-center justify-center h-[500px] bg-gray-100 rounded-lg">
+                  <div className="text-gray-600">Loading map...</div>
+                </div>
+              )}
             </div>
           </>
         )}

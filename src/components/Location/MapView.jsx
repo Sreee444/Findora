@@ -2,6 +2,7 @@
 import React from "react";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import "../../styles/map.css";
 import L from "leaflet";
 
 // Fix default marker icon issue in Leaflet with Webpack/Vite

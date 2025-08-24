@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import '../../styles/map.css';
 import L from 'leaflet';
 
 // Fix default marker icon issue in Leaflet with Webpack/Vite
@@ -12,8 +13,6 @@ L.Icon.Default.mergeOptions({
 });
 
 function LocationMarker({ onLocationSelect, position, setPosition, setSelectedAddress }) {
-  const [address, setAddress] = useState('');
-
   // Function to get address from coordinates
   const getAddressFromCoords = async (lat, lng) => {
     try {
@@ -44,7 +43,7 @@ function LocationMarker({ onLocationSelect, position, setPosition, setSelectedAd
   return position ? <Marker position={position} /> : null;
 }
 
-export default function MapPicker({ onLocationSelect, zoom = 2, center = [20, 0] }) {
+export default function MapPicker({ onLocationSelect, zoom = 6, center = [28.6139, 77.2090] }) {
   const [position, setPosition] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState('');
   const mapRef = useRef();
