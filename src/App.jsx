@@ -15,6 +15,7 @@ import Register from './components/Auth/Register';
 import Login from './components/Auth/Login';
 import VerifyEmail from './components/Auth/VerifyEmail';
 import ForgotPassword from './components/Auth/ForgotPassword';
+import ResetPassword from './components/Auth/ResetPassword';
 import Navbar from './components/Layout/Navbar';
 import Footer from './components/Layout/Footer';
 // import ThemeSwitcher from './components/Layout/ThemeSwitcher';
@@ -71,6 +72,7 @@ export default function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/verify-email" element={<VerifyEmail />} />
                     <Route path="/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/reset-password/:token" element={<ResetPassword />} />
                     <Route path="/profile" element={<ProtectedRoute element={<UserProfile />} />} />
                     <Route path="/history" element={<ProtectedRoute element={<UserHistory />} />} />
                     <Route path="/lost" element={<ProtectedRoute element={<LostForm />} />} />
