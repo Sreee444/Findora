@@ -1,0 +1,8 @@
+# Railway Deployment Config
+start = "node app.js"
+
+[build]
+command = "npm install"
+
+[env]
+PORT = "5000"

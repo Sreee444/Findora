@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for minimalist black & white theme */
+body {
+  @apply bg-white text-black;
+}
