@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import MapPicker from "./MapPicker";
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || 'https://gotcha-bn3z.onrender.com';
 
 // This component expects an itemId prop to fetch/update location for a specific item
 export default function LocationUpdate({ itemId }) {

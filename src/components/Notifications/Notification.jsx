@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from "react";
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || 'https://gotcha-bn3z.onrender.com';
 
 export default function Notification() {
   const [notifications, setNotifications] = useState([]);
