@@ -136,13 +136,26 @@ export default function MapPicker({ onLocationSelect, zoom = 6, center = [28.613
           </div>
         )}
         {position && (
-          <button
-            type="button"
-            onClick={handleDeleteLocation}
-            className="px-4 py-1 bg-red-500 text-white rounded-full hover:bg-red-600 text-xs font-semibold shadow border-2 border-red-300 hover:border-red-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-300"
-          >
-            Delete Location
-          </button>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                const googleMapsUrl = `https://www.google.com/maps?q=${position.lat},${position.lng}`;
+                window.open(googleMapsUrl, '_blank');
+              }}
+              className="px-3 py-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 text-xs font-semibold shadow border-2 border-blue-300 hover:border-blue-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-300"
+              title="View in Google Maps"
+            >
+              🗺️ View in Maps
+            </button>
+            <button
+              type="button"
+              onClick={handleDeleteLocation}
+              className="px-4 py-1 bg-red-500 text-white rounded-full hover:bg-red-600 text-xs font-semibold shadow border-2 border-red-300 hover:border-red-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-300"
+            >
+              Delete Location
+            </button>
+          </div>
         )}
       </div>
     </div>

@@ -182,6 +182,18 @@ export default function LocationPage() {
                             {item.location.address && (
                               <div className="text-gray-500">📍 {item.location.address}</div>
                             )}
+                            <div className="mt-2">
+                              <button
+                                onClick={() => {
+                                  const googleMapsUrl = `https://www.google.com/maps?q=${item.location.lat},${item.location.lng}`;
+                                  window.open(googleMapsUrl, '_blank');
+                                }}
+                                className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors"
+                                title="Open in Google Maps"
+                              >
+                                🗺️ View in Google Maps
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </Popup>
