@@ -46,6 +46,12 @@ export default function FoundList() {
                 <div className="text-gray-700 dark:text-gray-300 text-sm mb-1">{item.description}</div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">Reported by: {item.createdBy?.username || 'Unknown'}</div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">Date: {item.date ? new Date(item.date).toLocaleString() : 'N/A'}</div>
+                {item.location && (
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    📍 Location: {item.location.lat?.toFixed(4)}, {item.location.lng?.toFixed(4)}
+                    {item.location.address && ` (${item.location.address})`}
+                  </div>
+                )}
               </li>
             ))}
           </ul>
