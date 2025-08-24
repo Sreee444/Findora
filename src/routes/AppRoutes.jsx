@@ -18,9 +18,11 @@ import LoginRegisterPrompt from '../pages/LoginRegisterPrompt';
 // import LostFoundAccessPage from '../pages/LostFoundAccessPage';
 import { useAuth } from '../context/AuthContext';
 import ForgotPasswordPage from '../pages/ForgotPassword';
+import ResetPassword from '../components/Auth/ResetPassword';
 // ...existing code...
 
 export default function AppRoutes() {
+  console.log("AppRoutes component rendered, current location:", window.location.pathname); // Debug log
   const [admin, setAdmin] = useState(() => {
     const adminUser = localStorage.getItem('gotcha_admin');
     return adminUser ? JSON.parse(adminUser) : null;
@@ -38,6 +40,8 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
   <Route path="/lost" element={user ? <LostForm /> : <LoginRegisterPrompt />} />
   <Route path="/found" element={user ? <FoundForm /> : <LoginRegisterPrompt />} />
   <Route path="/user/dashboard" element={user ? <UserPage /> : <DashboardAccessPage />} />
@@ -47,7 +51,6 @@ export default function AppRoutes() {
       <Route path="/found-list" element={<FoundList />} />
   <Route path="/admin/login" element={<AdminLogin onLogin={setAdmin} />} />
   <Route path="/admin" element={admin ? <AdminPage /> : <Navigate to="/admin/login" replace />} />
-  <Route path="/forgot-password" element={<ForgotPasswordPage />} />
   <Route path="/history" element={user ? <UserHistory /> : <LoginRegisterPrompt />} />
   {/* <Route path="/lostfound-access" element={<LostFoundAccessPage />} /> */}
   <Route path="*" element={<NotFound />} />
