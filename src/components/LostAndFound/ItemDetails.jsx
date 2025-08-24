@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import MapView from "../Location/MapView";
+import { formatDateTimeIST } from "../../utils/helpers";
 const API_URL = import.meta.env.VITE_API_URL;
 
 // Expects an itemId prop
@@ -44,7 +45,7 @@ export default function ItemDetails({ itemId }) {
           </div>
           <div className="bg-gray-50 dark:bg-gray-700 rounded-md p-3">
             <span className="font-medium text-gray-600 dark:text-gray-300">📅 Date:</span>
-            <div className="text-gray-800 dark:text-white">{item.date ? new Date(item.date).toLocaleString() : "N/A"}</div>
+            <div className="text-gray-800 dark:text-white">{formatDateTimeIST(item.date)}</div>
           </div>
         </div>
       {item.location ? (

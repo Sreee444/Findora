@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { formatDateTimeIST } from '../../utils/helpers';
 const API_URL = import.meta.env.VITE_API_URL;
 
 
@@ -45,7 +46,7 @@ export default function LostList() {
                 <div className="font-semibold text-blue-800 dark:text-blue-200">{item.title}</div>
                 <div className="text-gray-700 dark:text-gray-300 text-sm mb-1">{item.description}</div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">Reported by: {item.createdBy?.username || 'Unknown'}</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">Date: {item.date ? new Date(item.date).toLocaleString() : 'N/A'}</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">{formatDateTimeIST(item.date)}</div>
                 {item.location && (
                   <div className="text-xs mt-2 bg-blue-50 dark:bg-blue-900/20 rounded-md p-2">
                     <div className="flex items-center justify-between">
