@@ -9,7 +9,6 @@ export default function FoundForm() {
   const [form, setForm] = useState({
     title: '',
     description: '',
-    date: '',
     contact: ''
   });
   const [status, setStatus] = useState('');
@@ -32,14 +31,22 @@ export default function FoundForm() {
     e.preventDefault();
     if (!user) return setStatus('You must be logged in.');
     if (!location) return setStatus('Please select a location.');
-    if (!form.date) return setStatus('Please select a date.');
+    if (!form.title) return setStatus('Please enter a title.');
+    if (!form.description) return setStatus('Please enter a description.');
     if (!form.contact) return setStatus('Please enter a contact.');
     setLoading(true);
     setStatus('');
     try {
-      await submitItem({ ...form, type: 'found', location });
+      // Automatically set current date/time when submitting
+      const currentDateTime = new Date().toISOString();
+      await submitItem({ 
+        ...form, 
+        type: 'found', 
+        location,
+        date: currentDateTime 
+      });
       setStatus('Found item request submitted for verification.');
-      setForm({ title: '', description: '', date: '', contact: '' });
+      setForm({ title: '', description: '', contact: '' });
       setLocation(null);
       setPicture(null);
       setPictureUrl('');
@@ -77,18 +84,6 @@ export default function FoundForm() {
             value={form.description}
             onChange={handleChange}
             className="px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-400 min-h-[80px] dark:bg-gray-900 dark:text-white dark:border-gray-700"
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="date" className="text-sm font-medium text-gray-700 dark:text-gray-200">Date Found</label>
-          <input
-            id="date"
-            name="date"
-            type="date"
-            required
-            value={form.date}
-            onChange={handleChange}
-            className="px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-400 dark:bg-gray-900 dark:text-white dark:border-gray-700"
           />
         </div>
         <div className="flex flex-col gap-2">

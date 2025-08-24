@@ -59,13 +59,12 @@ router.get("/:id", async (req, res) => {
 
 // Add new item (auth required)
 router.post("/", auth, async (req, res) => {
-  const { title, description, type, date, contact, location } = req.body;
+  const { title, description, type, contact, location } = req.body;
 
   if (
     !title || title.length < 3 ||
     !description || description.length < 10 ||
     !["lost", "found"].includes(type) ||
-    !date ||
     !contact
   ) {
     return res.status(400).json({ error: "Validation error" });
@@ -75,7 +74,7 @@ router.post("/", auth, async (req, res) => {
     title,
     description,
     type,
-    date,
+    date: new Date(), // Always use current timestamp when item is created
     contact,
     location,
     createdBy: req.user.id
