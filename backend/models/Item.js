@@ -6,6 +6,11 @@ const itemSchema = new mongoose.Schema({
   type: { type: String, enum: ["lost", "found"], required: true },
   date: { type: Date, required: true },
   contact: { type: String, required: true },
+  location: {
+    lat: { type: Number },
+    lng: { type: Number },
+    address: { type: String }
+  },
   claimed: { type: Boolean, default: false },
   claimedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
