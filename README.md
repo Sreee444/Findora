@@ -1,4 +1,4 @@
-# 🔍 Gotcha - Lost & Found Community Platform
+# 🔍 Recovera - Lost & Found Community Platform
 
 A modern, full-stack web application designed to help people reunite with their lost belongings through community collaboration.
 
@@ -39,6 +39,6 @@ A modern, full-stack web application designed to help people reunite with their 
 
 ---
 
-**Built with ❤️ by the Gotcha Team**
+**Built with ❤️ by the Recovera Team**
 
 *Connecting lost items with their owners, one find at a time.* 🤝
