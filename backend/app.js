@@ -2,22 +2,25 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-// Import routes (to be created next)
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, ".env") });
+
 import authRoutes from "./routes/auth.js";
 import itemRoutes from "./routes/items.js";
 import notificationRoutes from "./routes/notifications.js";
-
-dotenv.config();
 
 const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://gotcha-rosy.vercel.app'],
+  origin: true,
   credentials: true
 }));
-app.use(express.json());
+app.use(express.json({ limit: '15mb' }));
+app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 
 // Database connection
 const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/gotcha";
@@ -28,9 +31,9 @@ mongoose.connect(MONGO_URI)
 // Routes
 app.get("/", (req, res) => {
   res.json({ 
-    message: "Gotcha Lost & Found API", 
+    message: "Findora Lost & Found API", 
     status: "running",
-    version: "2.1.0", // Updated version to trigger Railway redeploy
+    version: "2.1.0",
     timestamp: new Date().toISOString()
   });
 });

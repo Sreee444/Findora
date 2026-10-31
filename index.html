@@ -1,12 +1,298 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gotcha</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Findora - Lost and Found System</title>
+  <meta name="description" content="A modern, secure, and community-driven platform to reunite lost items with their owners." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="styles.css?v=2.3" />
+</head>
+<body>
+<div id="toast-container"></div>
+<button id="dark-toggle" onclick="toggleDark()" aria-label="Toggle dark mode">☀️</button>
+<div id="app-shell">
+  <nav id="navbar">
+    <div class="nav-brand" onclick="navigate('home')">
+      <span>🔄</span> Findora
+    </div>
+    <button id="hamburger" onclick="toggleMobileMenu()">&#9776;</button>
+    <div class="nav-links" id="nav-links">
+      <button class="nav-btn nav-btn-ghost" onclick="navigate('lost-list'); closeMobileMenu()">🔍 Lost Items</button>
+      <button class="nav-btn nav-btn-ghost" onclick="navigate('found-list'); closeMobileMenu()">📦 Found Items</button>
+      <button class="nav-btn nav-btn-ghost" onclick="navigate('location-page'); closeMobileMenu()">🗺️ Map</button>
+      <button class="nav-btn nav-btn-blue" onclick="navigate('lost-form'); closeMobileMenu()">+ Report Lost</button>
+      <button class="nav-btn nav-btn-green" onclick="navigate('found-form'); closeMobileMenu()">+ Report Found</button>
+      <div id="nav-auth-section" class="nav-auth-section"></div>
+    </div>
+  </nav>
+  <div id="content-area">
+    <aside id="sidebar" style="display:none"></aside>
+    <main id="main-content">
+
+      <div class="page" id="page-home">
+        <div class="hero">
+          <div class="hero-logo">&#128269;</div>
+          <h1 class="hero-title">Findora - Lost and Found</h1>
+          <p class="hero-sub">A modern, secure, and community-driven platform to reunite lost items with their owners.</p>
+          <div class="hero-actions">
+            <button class="btn btn-blue" onclick="navigate('lost-list')">🔍 Browse Lost Items</button>
+            <button class="btn btn-green" onclick="navigate('found-list')">📦 Browse Found Items</button>
+            <button class="btn btn-ghost" style="border:1.5px solid var(--border)" onclick="navigate('location-page')">🗺️ Campus Map</button>
+          </div>
+          <div style="margin-top:14px;font-size:0.875rem;color:var(--text-muted)">
+            Lost or found something? <a href="#lost-form" onclick="navigate('lost-form');return false" style="color:var(--blue);font-weight:600;text-decoration:underline">Report Lost</a> or <a href="#found-form" onclick="navigate('found-form');return false" style="color:var(--green);font-weight:600;text-decoration:underline">Report Found</a>
+          </div>
+        </div>
+        <div class="feature-grid">
+          <div class="feature-card" onclick="navigate('lost-list')" style="cursor:pointer"><span class="feature-icon">&#128270;</span><div><div class="feature-title">Lost & Found Feed</div><div class="feature-desc">Browse all reported lost and found items freely without signing in.</div></div></div>
+          <div class="feature-card" onclick="navigate('location-page')" style="cursor:pointer"><span class="feature-icon">&#128205;</span><div><div class="feature-title">Location Tracking</div><div class="feature-desc">See where items were lost or found on a live interactive map.</div></div></div>
+          <div class="feature-card" onclick="navigate('lost-form')" style="cursor:pointer"><span class="feature-icon">&#128236;</span><div><div class="feature-title">Instant Reporting</div><div class="feature-desc">Report lost or found belongings with photo upload and auto-compression.</div></div></div>
+          <div class="feature-card"><span class="feature-icon">&#128737;</span><div><div class="feature-title">Admin Verified</div><div class="feature-desc">All submissions are reviewed for safety, accuracy, and quick recovery.</div></div></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-login">
+        <div class="auth-page">
+          <div class="card auth-card">
+            <div class="auth-title">&#128272; Sign In</div>
+            <div class="form-group"><label class="form-label">Email or Username</label><input class="form-input" type="text" id="login-email" placeholder="Enter your email or username" /></div>
+            <div class="form-group"><label class="form-label">Password</label><div class="pw-wrap"><input class="form-input" type="password" id="login-password" placeholder="Password" /><button class="pw-toggle" type="button" onclick="togglePw('login-password',this)">&#128065;</button></div></div>
+            <button class="btn btn-blue btn-w-full" id="login-btn" onclick="handleLogin()">Sign In</button>
+            <a class="auth-link" style="display:block;text-align:center;margin-top:10px" href="#forgot-password" onclick="navigate('forgot-password');return false">Forgot Password?</a>
+            <div id="login-status"></div>
+            <div class="auth-footer" style="margin-top:14px;border-top:1px solid var(--border);padding-top:12px">
+              No account? <a class="auth-link" href="#register" onclick="navigate('register');return false">Register</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-register">
+        <div class="auth-page">
+          <div class="card auth-card">
+            <div class="auth-title">&#128221; Register</div>
+            <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="reg-email" placeholder="you@campus.edu" /></div>
+            <div class="form-group"><label class="form-label">Username</label><input class="form-input" type="text" id="reg-username" placeholder="Choose a username" minlength="3" /></div>
+            <div class="form-group"><label class="form-label">Password</label><div class="pw-wrap"><input class="form-input" type="password" id="reg-password" placeholder="Password" /><button class="pw-toggle" type="button" onclick="togglePw('reg-password',this)">&#128065;</button></div></div>
+            <div class="form-group"><label class="form-label">Confirm Password</label><div class="pw-wrap"><input class="form-input" type="password" id="reg-confirm" placeholder="Re-enter Password" /><button class="pw-toggle" type="button" onclick="togglePw('reg-confirm',this)">&#128065;</button></div></div>
+            <button class="btn btn-blue btn-w-full" id="reg-btn" onclick="handleRegister()">Register</button>
+            <div id="reg-status"></div>
+            <div class="auth-footer">Have an account? <a class="auth-link" href="#login" onclick="navigate('login');return false">Sign In</a></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-forgot-password">
+        <div class="auth-page">
+          <div class="card auth-card" id="forgot-form-card">
+            <div class="auth-title">&#128272; Forgot Password</div>
+            <p style="text-align:center;color:var(--text-muted);font-size:.9rem;margin-bottom:20px">Enter your email to receive a reset link.</p>
+            <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" id="forgot-email" placeholder="you@campus.edu" /></div>
+            <button class="btn btn-blue btn-w-full" id="forgot-btn" onclick="handleForgotPassword()">Send Reset Link</button>
+            <div id="forgot-status"></div>
+            <div class="auth-footer"><a class="auth-link" href="#login" onclick="navigate('login');return false">Back to Login</a></div>
+          </div>
+          <div class="card auth-card hidden" id="forgot-sent-card" style="text-align:center">
+            <div style="font-size:3.5rem;margin-bottom:12px">&#128231;</div>
+            <div class="auth-title" style="font-size:1.4rem">Check Your Email</div>
+            <p style="color:var(--text-muted);margin-bottom:16px;font-size:.9rem">Reset link sent to <strong id="forgot-email-show"></strong>. Check spam too. Link expires in 1 hour.</p>
+            <button class="btn btn-blue" onclick="navigate('login')">Back to Login</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-lost-form">
+        <div style="max-width:520px;margin:0 auto">
+          <div class="card">
+            <div class="auth-title">&#10067; Report Lost Item</div>
+            <div class="form-group"><label class="form-label">Item Name</label><input class="form-input" type="text" id="lost-title" placeholder="What did you lose?" /></div>
+            <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="lost-desc" placeholder="Describe the item"></textarea></div>
+            <div class="form-group"><label class="form-label">Contact Info</label><input class="form-input" type="text" id="lost-contact" placeholder="Your email or phone number" /></div>
+            <div class="form-group">
+              <label class="form-label">Location - Pick on map, search place/pincode, or use GPS</label>
+              <div class="loc-search-bar">
+                <input class="form-input loc-search-input" type="text" id="lost-loc-search" placeholder="Type place, landmark, or pincode (e.g. 560001)..." onkeydown="if(event.key==='Enter'){event.preventDefault();searchLocation('lost')}" />
+                <button class="btn btn-blue loc-search-btn" type="button" id="lost-search-btn" onclick="searchLocation('lost')">🔍 Search</button>
+                <button class="btn btn-gps loc-gps-btn" type="button" id="lost-gps-btn" onclick="useCurrentLocation('lost')" title="Use my current GPS location">🎯 My GPS</button>
+              </div>
+              <div id="map-picker-lost" style="height:280px;border-radius:10px;border:1.5px solid var(--border);overflow:hidden;margin-top:8px"></div>
+              <div id="lost-location-info" class="location-info hidden"></div>
+              <button class="map-link-btn hidden" id="lost-map-link" onclick="openMapLost()">🗺️ View on Google Maps</button>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Picture (optional) - Upload item photo</label>
+              <input class="file-input form-input" type="file" id="lost-picture" accept="image/*" onchange="previewImage(this,'lost-img-preview','lost-img-wrap')" style="padding:6px" />
+              <div id="lost-img-wrap" class="img-preview-wrap hidden">
+                <img id="lost-img-preview" class="img-preview" alt="Preview" />
+                <button type="button" class="img-remove-btn" onclick="clearSelectedImage('lost')">✕ Remove Picture</button>
+              </div>
+            </div>
+            <button class="btn btn-blue btn-w-full" id="lost-submit-btn" onclick="handleLostSubmit()">Submit</button>
+            <div id="lost-status"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-found-form">
+        <div style="max-width:520px;margin:0 auto">
+          <div class="card">
+            <div class="auth-title">&#128230; Report Found Item</div>
+            <div class="form-group"><label class="form-label">Item Name</label><input class="form-input" type="text" id="found-title" placeholder="What did you find?" /></div>
+            <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="found-desc" placeholder="Describe the item"></textarea></div>
+            <div class="form-group"><label class="form-label">Contact Info</label><input class="form-input" type="text" id="found-contact" placeholder="Your email or phone number" /></div>
+            <div class="form-group">
+              <label class="form-label">Location - Pick on map, search place/pincode, or use GPS</label>
+              <div class="loc-search-bar">
+                <input class="form-input loc-search-input" type="text" id="found-loc-search" placeholder="Type place, landmark, or pincode (e.g. 560001)..." onkeydown="if(event.key==='Enter'){event.preventDefault();searchLocation('found')}" />
+                <button class="btn btn-green loc-search-btn" type="button" id="found-search-btn" onclick="searchLocation('found')">🔍 Search</button>
+                <button class="btn btn-gps loc-gps-btn" type="button" id="found-gps-btn" onclick="useCurrentLocation('found')" title="Use my current GPS location">🎯 My GPS</button>
+              </div>
+              <div id="map-picker-found" style="height:280px;border-radius:10px;border:1.5px solid var(--border);overflow:hidden;margin-top:8px"></div>
+              <div id="found-location-info" class="location-info hidden"></div>
+              <button class="map-link-btn hidden" id="found-map-link" onclick="openMapFound()">🗺️ View on Google Maps</button>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Picture (optional) - Upload item photo</label>
+              <input class="file-input form-input" type="file" id="found-picture" accept="image/*" onchange="previewImage(this,'found-img-preview','found-img-wrap')" style="padding:6px" />
+              <div id="found-img-wrap" class="img-preview-wrap hidden">
+                <img id="found-img-preview" class="img-preview" alt="Preview" />
+                <button type="button" class="img-remove-btn" onclick="clearSelectedImage('found')">✕ Remove Picture</button>
+              </div>
+            </div>
+            <button class="btn btn-green btn-w-full" id="found-submit-btn" onclick="handleFoundSubmit()">Submit</button>
+            <div id="found-status"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-lost-list">
+        <h1 class="page-title">All Lost Items</h1>
+        <p class="page-subtitle">Browse all reported lost items from the community.</p>
+        <div id="lost-list-content"><div style="text-align:center;padding:40px"><div class="spinner"></div></div></div>
+      </div>
+
+      <div class="page" id="page-found-list">
+        <h1 class="page-title">All Found Items</h1>
+        <p class="page-subtitle">Browse all reported found items from the community.</p>
+        <div id="found-list-content"><div style="text-align:center;padding:40px"><div class="spinner"></div></div></div>
+      </div>
+
+      <div class="page" id="page-user-dashboard">
+        <h1 class="page-title" id="dash-welcome">Welcome!</h1>
+        <p class="page-subtitle">Manage your lost and found reports, update your profile, and more.</p>
+        <div class="dash-grid">
+          <button class="dash-card dash-card-blue" onclick="navigate('lost-list')"><div class="dash-card-icon">&#10067;</div>View Lost Items</button>
+          <button class="dash-card dash-card-green" onclick="navigate('found-list')"><div class="dash-card-icon">&#128230;</div>View Found Items</button>
+          <button class="dash-card dash-card-yellow" onclick="navigate('profile')"><div class="dash-card-icon">&#128100;</div>Edit Profile</button>
+          <button class="dash-card dash-card-indigo" onclick="navigate('lost-form')"><div class="dash-card-icon">&#10067;</div>Report Lost</button>
+          <button class="dash-card dash-card-pink" onclick="navigate('found-form')"><div class="dash-card-icon">&#128230;</div>Report Found</button>
+        </div>
+      </div>
+
+      <div class="page" id="page-profile">
+        <button class="back-btn" onclick="history.back()">&#8592; Back</button>
+        <h1 class="page-title">My Profile</h1>
+        <p class="page-subtitle">View and edit your profile information.</p>
+        <div id="profile-content"><div style="text-align:center;padding:40px"><div class="spinner"></div></div></div>
+      </div>
+
+      <div class="page" id="page-history">
+        <button class="back-btn" onclick="history.back()">&#8592; Back</button>
+        <h1 class="page-title">Your History</h1>
+        <div id="history-content"><div style="text-align:center;padding:40px"><div class="spinner"></div></div></div>
+      </div>
+
+      <div class="page" id="page-notifications-page">
+        <h1 class="page-title">Notifications</h1>
+        <p class="page-subtitle">Your recent activity and system notifications.</p>
+        <div class="card" style="max-width:600px"><div style="text-align:center;padding:32px;color:var(--text-muted)"><div style="font-size:3rem;margin-bottom:12px">&#128276;</div><div style="font-weight:600">No new notifications</div><div style="font-size:.875rem;margin-top:8px">You will be notified when there is activity on your items.</div></div></div>
+      </div>
+
+      <div class="page" id="page-location-page">
+        <h1 class="page-title">Location Map</h1>
+        <p class="page-subtitle">View and filter all lost and found item locations on the interactive map.</p>
+        <div class="map-controls">
+          <button class="map-filter-btn active" id="filter-all" onclick="filterMapItems('all')">🌐 All Items</button>
+          <button class="map-filter-btn" id="filter-lost" onclick="filterMapItems('lost')">🔴 Lost Items</button>
+          <button class="map-filter-btn" id="filter-found" onclick="filterMapItems('found')">🟢 Found Items</button>
+        </div>
+        <div class="loc-search-bar" style="margin-bottom:12px">
+          <input class="form-input loc-search-input" type="text" id="main-map-search" placeholder="Search any place or pincode to jump (e.g. 560001, Bangalore)..." onkeydown="if(event.key==='Enter'){event.preventDefault();searchLocation('main')}" />
+          <button class="btn btn-blue loc-search-btn" type="button" id="main-search-btn" onclick="searchLocation('main')">🔍 Zoom to Place</button>
+          <button class="btn btn-gps loc-gps-btn" type="button" id="main-gps-btn" onclick="useCurrentLocation('main')">🎯 Near Me</button>
+        </div>
+        <div id="map-view-container" style="height:460px;border-radius:12px;overflow:hidden;border:1.5px solid var(--border);box-shadow:var(--shadow-md)"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+          <p style="font-size:.85rem;color:var(--text-muted)">💡 Click pins or items below to inspect full details.</p>
+          <div style="display:flex;gap:14px;font-size:.82rem;font-weight:700">
+            <span style="color:#ef4444">🔴 Lost</span>
+            <span style="color:#22c55e">🟢 Found</span>
+          </div>
+        </div>
+        <div id="map-items-list" style="margin-top:20px"></div>
+      </div>
+
+      <div class="page" id="page-admin-dashboard">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+          <div>
+            <h1 class="page-title" style="margin-bottom:4px">&#128737; Admin Panel</h1>
+            <p class="page-subtitle">Centralized item moderation, approvals, and user governance.</p>
+          </div>
+          <span class="admin-pill">👑 ADMINISTRATOR</span>
+        </div>
+
+        <div class="admin-tab-bar">
+          <button class="admin-tab-btn active" id="tab-btn-approvals" onclick="switchAdminTab('approvals')">📝 Approvals</button>
+          <button class="admin-tab-btn" id="tab-btn-users" onclick="switchAdminTab('users')">👥 Users</button>
+          <button class="admin-tab-btn" id="tab-btn-overview" onclick="switchAdminTab('overview')">📊 Overview</button>
+        </div>
+
+        <div class="admin-tab-pane" id="admin-pane-approvals">
+          <div id="approval-content"><div style="text-align:center;padding:40px"><div class="spinner"></div></div></div>
+        </div>
+
+        <div class="admin-tab-pane hidden" id="admin-pane-users">
+          <div id="users-content"><div style="text-align:center;padding:40px"><div class="spinner"></div></div></div>
+        </div>
+
+        <div class="admin-tab-pane hidden" id="admin-pane-overview">
+          <div id="admin-stats-content"><div style="text-align:center;padding:40px"><div class="spinner"></div></div></div>
+        </div>
+      </div>
+
+      <div class="page" id="page-not-found">
+        <div style="text-align:center;padding:80px 20px">
+          <div style="font-size:5rem;margin-bottom:16px">&#128269;</div>
+          <h1 style="font-size:2rem;font-weight:800;margin-bottom:8px">Page Not Found</h1>
+          <p style="color:var(--text-muted);margin-bottom:24px">The page you are looking for does not exist.</p>
+          <button class="btn btn-blue" onclick="navigate('home')">Go Home</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+  <!-- Item Details Modal -->
+  <div id="item-details-modal" class="modal-overlay hidden" onclick="handleModalBackdropClick(event)">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span id="modal-item-badge" class="badge"></span>
+          <h2 id="modal-item-title" class="modal-item-title"></h2>
+        </div>
+        <button class="modal-close-btn" onclick="closeItemModal()" aria-label="Close details">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-item-body">
+        <div style="text-align:center;padding:40px"><div class="spinner"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <footer id="footer">&copy; <span id="footer-year"></span> Findora. All rights reserved.</footer>
+</div>
+<script src="app.js?v=2.3"></script>
+</body>
 </html>

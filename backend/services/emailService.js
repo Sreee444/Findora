@@ -25,21 +25,21 @@ export const sendWelcomeEmail = async (userEmail, username) => {
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: userEmail,
-      subject: '🎉 Welcome to Gotcha - Lost & Found Community!',
+      subject: '🎉 Welcome to Findora - Lost & Found Community!',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <!-- Header with Logo -->
             <div style="text-align: center; margin-bottom: 30px;">
               <h1 style="color: #14b8a6; margin: 0; font-size: 2.5em;">
-                🔍 Gotcha
+                🔍 Findora
               </h1>
               <p style="color: #6b7280; margin: 5px 0 0 0; font-size: 1.1em;">Lost & Found Community</p>
             </div>
             
             <!-- Welcome Message -->
             <div style="text-align: center; margin-bottom: 30px;">
-              <h2 style="color: #374151; margin-bottom: 15px;">Welcome to Gotcha, ${username || 'Friend'}! 🎊</h2>
+              <h2 style="color: #374151; margin-bottom: 15px;">Welcome to Findora, ${username || 'Friend'}! 🎊</h2>
               <p style="color: #6b7280; font-size: 1.1em; line-height: 1.6;">
                 Thank you for joining our community! You're now part of a network that helps reunite people with their lost belongings.
               </p>
@@ -47,7 +47,7 @@ export const sendWelcomeEmail = async (userEmail, username) => {
             
             <!-- Feature Highlights -->
             <div style="background-color: #f0fdfa; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
-              <h3 style="color: #14b8a6; margin-bottom: 15px; text-align: center;">What you can do with Gotcha:</h3>
+              <h3 style="color: #14b8a6; margin-bottom: 15px; text-align: center;">What you can do with Findora:</h3>
               <ul style="color: #374151; padding-left: 0; list-style: none;">
                 <li style="margin-bottom: 10px; padding-left: 25px; position: relative;">
                   <span style="position: absolute; left: 0; color: #14b8a6;">📍</span>
@@ -71,9 +71,9 @@ export const sendWelcomeEmail = async (userEmail, username) => {
             <!-- Getting Started -->
             <div style="text-align: center; margin-bottom: 25px;">
               <p style="color: #6b7280; margin-bottom: 20px;">Ready to get started? Log in to your account and begin helping our community!</p>
-              <a href="${process.env.FRONTEND_URL || 'https://gotcha-rosy.vercel.app'}/login" 
+              <a href="${process.env.FRONTEND_URL || 'https://findora-rosy.vercel.app'}/login" 
                  style="background-color: #14b8a6; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
-                Go to Gotcha App
+                Go to Findora App
               </a>
             </div>
             
@@ -92,7 +92,7 @@ export const sendWelcomeEmail = async (userEmail, username) => {
             <div style="text-align: center; border-top: 1px solid #e5e7eb; padding-top: 20px; color: #6b7280; font-size: 0.9em;">
               <p style="margin: 0 0 10px 0;">Need help? Contact us or check our community guidelines.</p>
               <p style="margin: 0;">
-                <strong>Gotcha Team</strong><br>
+                <strong>Findora Team</strong><br>
                 Connecting lost items with their owners, one find at a time. 🤝
               </p>
             </div>
@@ -100,11 +100,11 @@ export const sendWelcomeEmail = async (userEmail, username) => {
         </div>
       `,
       text: `
-Welcome to Gotcha - Lost & Found Community!
+Welcome to Findora - Lost & Found Community!
 
 Hi ${username || 'Friend'},
 
-Thank you for joining Gotcha! You're now part of a community that helps reunite people with their lost belongings.
+Thank you for joining Findora! You're now part of a community that helps reunite people with their lost belongings.
 
 What you can do:
 - Report Lost Items: Post details about items you've lost
@@ -112,7 +112,7 @@ What you can do:
 - Get Notifications: Receive alerts when matching items are posted
 - Track Your Posts: Monitor the status of your reports
 
-Ready to get started? Log in at: ${process.env.FRONTEND_URL || 'https://gotcha-rosy.vercel.app'}/login
+Ready to get started? Log in at: ${process.env.FRONTEND_URL || 'https://findora-rosy.vercel.app'}/login
 
 Pro Tips:
 - Include clear photos when posting items
@@ -123,7 +123,7 @@ Pro Tips:
 Need help? Contact us or check our community guidelines.
 
 Best regards,
-The Gotcha Team
+The Findora Team
 Connecting lost items with their owners, one find at a time.
       `
     };
@@ -153,7 +153,7 @@ export const sendMatchNotificationEmail = async (userEmail, itemTitle, matchType
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <h1 style="color: #14b8a6; text-align: center;">🔍 Gotcha Match Alert!</h1>
+            <h1 style="color: #14b8a6; text-align: center;">🔍 Findora Match Alert!</h1>
             <p style="color: #374151; font-size: 1.1em;">
               Great news! There's a potential match for <strong>"${itemTitle}"</strong>.
             </p>
@@ -164,7 +164,7 @@ export const sendMatchNotificationEmail = async (userEmail, itemTitle, matchType
               }
             </p>
             <div style="text-align: center; margin: 25px 0;">
-              <a href="${process.env.FRONTEND_URL || 'https://gotcha-rosy.vercel.app'}/user/dashboard" 
+              <a href="${process.env.FRONTEND_URL || 'https://findora-rosy.vercel.app'}/user/dashboard" 
                  style="background-color: #14b8a6; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold;">
                 Check Your Dashboard
               </a>
@@ -190,18 +190,18 @@ export const sendMatchNotificationEmail = async (userEmail, itemTitle, matchType
 export const sendPasswordResetEmail = async (userEmail, username, resetToken) => {
   try {
     const transporter = createTransporter();
-    const resetUrl = `${process.env.FRONTEND_URL || 'https://gotcha-rosy.vercel.app'}/reset-password/${resetToken}`;
+    const resetUrl = `${process.env.FRONTEND_URL || 'https://findora-rosy.vercel.app'}/reset-password/${resetToken}`;
     
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: userEmail,
-      subject: '🔐 Gotcha - Password Reset Request',
+      subject: '🔐 Findora - Password Reset Request',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
           <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <!-- Header -->
             <div style="text-align: center; margin-bottom: 30px;">
-              <h1 style="color: #14b8a6; margin: 0; font-size: 2.5em;">🔍 Gotcha</h1>
+              <h1 style="color: #14b8a6; margin: 0; font-size: 2.5em;">🔍 Findora</h1>
               <p style="color: #6b7280; margin: 5px 0 0 0; font-size: 1.1em;">Lost & Found Community</p>
             </div>
             
@@ -209,7 +209,7 @@ export const sendPasswordResetEmail = async (userEmail, username, resetToken) =>
             <div style="text-align: center; margin-bottom: 30px;">
               <h2 style="color: #374151; margin-bottom: 15px;">Password Reset Request 🔐</h2>
               <p style="color: #6b7280; font-size: 1.1em; line-height: 1.6;">
-                Hi ${username || 'there'}! We received a request to reset your password for your Gotcha account.
+                Hi ${username || 'there'}! We received a request to reset your password for your Findora account.
               </p>
             </div>
             
@@ -244,7 +244,7 @@ export const sendPasswordResetEmail = async (userEmail, username, resetToken) =>
             <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
               <p style="color: #6b7280; font-size: 0.85em; margin: 0;">
                 This email was sent to ${userEmail}<br>
-                © 2025 Gotcha - Lost & Found Community
+                © 2025 Findora - Lost & Found Community
               </p>
             </div>
           </div>

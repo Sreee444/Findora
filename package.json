@@ -1,26 +1,11 @@
 {
-  "name": "gotcha",
-  "version": "0.1.0",
+  "name": "findora",
+  "version": "1.0.0",
   "private": true,
+  "description": "Findora - Lost and Found Community Platform (Pure HTML, CSS, JavaScript & Node.js API)",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@emailjs/browser": "^3.11.0",
-    "framer-motion": "^11.0.17",
-    "leaflet": "^1.9.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-leaflet": "^4.2.1",
-    "react-router-dom": "^6.23.1",
-    "tailwindcss": "^3.3.3"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.2.1",
-    "autoprefixer": "^10.4.15",
-    "postcss": "^8.4.28",
-    "vite": "^7.1.2"
+    "start": "npm --prefix backend start",
+    "backend": "npm --prefix backend start",
+    "backend:dev": "npm --prefix backend run dev"
   }
 }

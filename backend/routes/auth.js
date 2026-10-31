@@ -9,27 +9,46 @@ import { sendWelcomeEmail, sendPasswordResetEmail } from "../services/emailServi
 
 const router = express.Router();
 
+const ADMIN_EMAILS = [
+  'admin@campus.edu',
+  'findoraofficial101@gmail.com',
+  'recoveraofficial101@gmail.com',
+  'gotchaofficial101@gmail.com',
+  (process.env.ADMIN_EMAIL || '').toLowerCase()
+].filter(Boolean);
+
+const checkIsAdmin = (user) => {
+  if (!user) return false;
+  if (user.role === 'admin') return true;
+  const email = (user.email || '').toLowerCase();
+  return ADMIN_EMAILS.some(e => e.toLowerCase() === email);
+};
+
 // Get all users (admin only)
 router.get('/users', auth, async (req, res) => {
-  // Optionally: check if req.user is admin
+  if (!checkIsAdmin(req.user)) {
+    return res.status(403).json({ error: 'Access denied: Admin privileges required' });
+  }
   const users = await User.find({}, '-password');
   res.json(users);
 });
 
 // Delete a user (admin only)
 router.delete('/users/:id', auth, async (req, res) => {
-  // Optionally: check if req.user is admin
+  if (!checkIsAdmin(req.user)) {
+    return res.status(403).json({ error: 'Access denied: Admin privileges required' });
+  }
   const user = await User.findByIdAndDelete(req.params.id);
   if (!user) return res.status(404).json({ error: 'User not found' });
   res.json({ message: 'User deleted' });
 });
 
-
 // Get current user profile
 router.get("/me", auth, async (req, res) => {
   const user = await User.findById(req.user.id).select("-password");
   if (!user) return res.status(404).json({ error: "User not found" });
-  res.json(user);
+  const isAdminUser = checkIsAdmin(user);
+  res.json({ ...user.toObject(), role: isAdminUser ? 'admin' : (user.role || 'user') });
 });
 
 // Update current user profile (email and/or username)
@@ -190,7 +209,8 @@ router.post("/signup", async (req, res) => {
     if (existing) return res.status(400).json({ error: "Email exists" });
 
     const hash = await bcrypt.hash(password, 10);
-    const user = new User({ email, password: hash, username });
+    const role = checkIsAdmin({ email }) ? 'admin' : 'user';
+    const user = new User({ email, password: hash, username, role });
     await user.save();
     
     // Send welcome email (don't block registration if email fails)
@@ -204,15 +224,13 @@ router.post("/signup", async (req, res) => {
     
     res.json({ 
       message: "User created successfully", 
-      emailSent: true // Indicate that email was attempted
+      emailSent: true
     });
   } catch (error) {
     console.error('Signup error:', error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
-
 
 // Login route (accepts email or username)
 router.post("/login", async (req, res) => {
@@ -227,8 +245,23 @@ router.post("/login", async (req, res) => {
   const match = await bcrypt.compare(password, user.password);
   if (!match) return res.status(400).json({ error: "Invalid credentials" });
 
-  const token = jwt.sign({ id: user._id, email: user.email, username: user.username }, process.env.JWT_SECRET || "mysecret");
-  res.json({ token });
+  const isAdminUser = checkIsAdmin(user);
+  const role = isAdminUser ? 'admin' : (user.role || 'user');
+
+  const token = jwt.sign(
+    { id: user._id, email: user.email, username: user.username, role },
+    process.env.JWT_SECRET || "mysecret",
+    { expiresIn: "7d" }
+  );
+  res.json({ 
+    token, 
+    user: { 
+      id: user._id, 
+      email: user.email, 
+      username: user.username,
+      role 
+    } 
+  });
 });
 
 export default router;

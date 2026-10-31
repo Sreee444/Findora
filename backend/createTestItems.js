@@ -29,6 +29,8 @@ async function createTestItems() {
       type: "lost",
       date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
       contact: "john.doe@email.com",
+      image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&auto=format&fit=crop&q=80",
+      location: { lat: 12.9716, lng: 77.5946, address: "Central Campus Library, 2nd Floor" },
       createdBy: adminUser._id,
       approved: true
     },
@@ -38,6 +40,8 @@ async function createTestItems() {
       type: "found",
       date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
       contact: "finder@email.com",
+      image: "https://images.unsplash.com/photo-1627123424574-724758594e93?w=600&auto=format&fit=crop&q=80",
+      location: { lat: 12.9724, lng: 77.5955, address: "Main Cafeteria, Table 14" },
       createdBy: adminUser._id,
       approved: true
     },
@@ -47,8 +51,10 @@ async function createTestItems() {
       type: "lost",
       date: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
       contact: "carowner@email.com",
+      image: "https://images.unsplash.com/photo-1589824783837-6169889fa20f?w=600&auto=format&fit=crop&q=80",
+      location: { lat: 12.9702, lng: 77.5930, address: "North Parking Lot, Section B" },
       createdBy: adminUser._id,
-      approved: false
+      approved: true
     },
     {
       title: "Found Headphones",
@@ -56,8 +62,10 @@ async function createTestItems() {
       type: "found",
       date: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
       contact: "studyroom@email.com",
+      image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80",
+      location: { lat: 12.9730, lng: 77.5960, address: "Quiet Study Hall, Room 302" },
       createdBy: adminUser._id,
-      approved: false
+      approved: true
     },
     {
       title: "Lost Textbook",
@@ -65,6 +73,8 @@ async function createTestItems() {
       type: "lost",
       date: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
       contact: "student@email.com",
+      image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80",
+      location: { lat: 12.9710, lng: 77.5940, address: "CS Block, Lecture Hall 1" },
       createdBy: adminUser._id,
       approved: true
     }

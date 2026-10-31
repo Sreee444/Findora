@@ -59,7 +59,8 @@ router.get("/:id", async (req, res) => {
 
 // Add new item (auth required)
 router.post("/", auth, async (req, res) => {
-  const { title, description, type, contact, location } = req.body;
+  const { title, description, type, contact, location, image } = req.body;
+  console.log(`[API POST /api/items] user=${req.user.id} title="${title}" type="${type}" hasImage=${!!image} imgLen=${image ? image.length : 0}`);
 
   if (
     !title || title.length < 3 ||
@@ -77,6 +78,8 @@ router.post("/", auth, async (req, res) => {
     date: new Date(), // Always use current timestamp when item is created
     contact,
     location,
+    image: image || null,
+    approved: true, // Visible immediately in lost/found lists
     createdBy: req.user.id
   });
   await item.save();
@@ -109,24 +112,52 @@ router.post("/:id/claim", auth, async (req, res) => {
   res.json({ message: "Item claimed" });
 });
 
-// Update item location (auth required)
-router.put("/:id/location", auth, async (req, res) => {
+// Delete an item (auth required: creator or admin)
+router.delete("/:id", auth, async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
     if (!item) return res.status(404).json({ error: "Item not found" });
-    
-    // Check if user owns this item
-    if (item.createdBy.toString() !== req.user.id) {
+
+    const isCreator = item.createdBy.toString() === req.user.id;
+    const userEmail = (req.user.email || '').toLowerCase();
+    const isAdmin = req.user.role === 'admin' || ['admin@campus.edu', 'findoraofficial101@gmail.com', 'recoveraofficial101@gmail.com', 'gotchaofficial101@gmail.com'].includes(userEmail);
+
+    if (!isCreator && !isAdmin) {
+      return res.status(403).json({ error: "Not authorized to delete this item" });
+    }
+
+    await Item.findByIdAndDelete(req.params.id);
+    res.json({ message: "Item deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to delete item" });
+  }
+});
+
+// Update item details or image (auth required: creator or admin)
+router.put("/:id", auth, async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) return res.status(404).json({ error: "Item not found" });
+
+    const isCreator = item.createdBy.toString() === req.user.id;
+    const userEmail = (req.user.email || '').toLowerCase();
+    const isAdmin = req.user.role === 'admin' || ['admin@campus.edu', 'findoraofficial101@gmail.com', 'recoveraofficial101@gmail.com', 'gotchaofficial101@gmail.com'].includes(userEmail);
+
+    if (!isCreator && !isAdmin) {
       return res.status(403).json({ error: "Not authorized to update this item" });
     }
 
-    const { location } = req.body;
-    item.location = location;
+    const { title, description, contact, image, location } = req.body;
+    if (title) item.title = title;
+    if (description) item.description = description;
+    if (contact) item.contact = contact;
+    if (image !== undefined) item.image = image;
+    if (location) item.location = location;
+
     await item.save();
-    
-    res.json({ message: "Location updated successfully", item });
+    res.json({ message: "Item updated successfully", item });
   } catch (err) {
-    res.status(500).json({ error: "Failed to update location" });
+    res.status(500).json({ error: "Failed to update item" });
   }
 });
 

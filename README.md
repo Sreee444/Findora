@@ -1,6 +1,9 @@
-# 🔍 Recovera - Lost & Found Community Platform
+# 🔍 Findora - Lost & Found Community Platform
 
 A modern, full-stack web application designed to help people reunite with their lost belongings through community collaboration.
+
+> 📚 **Looking for deep technical architecture & interview defense?**  
+> Check out the [Complete Architecture, Tech Tradeoffs & Interview Guide](PROJECT_ARCHITECTURE_AND_INTERVIEW_GUIDE.md).
 
 ## 🌟 Website Features
 
@@ -33,12 +36,25 @@ A modern, full-stack web application designed to help people reunite with their 
 ### 🎨 Modern Design
 - Responsive design for all devices
 - Dark/Light mode toggle
-- Professional UI with Tailwind CSS
+- Handcrafted modern UI with Vanilla CSS & animations
 - Interactive maps with Leaflet
 - Mobile-first approach
 
+## 🚀 Quick Start
+
+### 1. Frontend (Pure HTML, CSS & Vanilla JS)
+- Double-click `open-website.bat` or open `index.html` directly in your browser.
+- No build tools, bundlers, or dependencies required!
+
+### 2. Backend (Node.js & Express)
+- Run `start-backend.bat` or:
+  ```bash
+  npm start
+  ```
+  *(or `cd backend && npm start`)*
+
 ---
 
-**Built with ❤️ by the Recovera Team**
+**Built with ❤️ by the Findora Team**
 
 *Connecting lost items with their owners, one find at a time.* 🤝
