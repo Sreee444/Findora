@@ -1,7 +1,7 @@
 /* CONFIG */
 const API_URL = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
   ? 'http://localhost:5000'
-  : 'https://gotcha-bn3z.onrender.com';
+  : 'https://findora-c7gp.onrender.com';
 const ADMIN_EMAILS = ['admin@campus.edu', 'findoraofficial101@gmail.com', 'recoveraofficial101@gmail.com', 'gotchaofficial101@gmail.com'];
 
 /* STATE */
