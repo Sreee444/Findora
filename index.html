@@ -75,7 +75,7 @@
         <div class="auth-page">
           <div class="card auth-card">
             <div class="auth-title">&#128221; Register</div>
-            <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="reg-email" placeholder="you@campus.edu" /></div>
+            <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="reg-email" placeholder="you@email.com" /></div>
             <div class="form-group"><label class="form-label">Username</label><input class="form-input" type="text" id="reg-username" placeholder="Choose a username" minlength="3" /></div>
             <div class="form-group"><label class="form-label">Password</label><div class="pw-wrap"><input class="form-input" type="password" id="reg-password" placeholder="Password" /><button class="pw-toggle" type="button" onclick="togglePw('reg-password',this)">&#128065;</button></div></div>
             <div class="form-group"><label class="form-label">Confirm Password</label><div class="pw-wrap"><input class="form-input" type="password" id="reg-confirm" placeholder="Re-enter Password" /><button class="pw-toggle" type="button" onclick="togglePw('reg-confirm',this)">&#128065;</button></div></div>
@@ -91,7 +91,7 @@
           <div class="card auth-card" id="forgot-form-card">
             <div class="auth-title">&#128272; Forgot Password</div>
             <p style="text-align:center;color:var(--text-muted);font-size:.9rem;margin-bottom:20px">Enter your email to receive a reset link.</p>
-            <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" id="forgot-email" placeholder="you@campus.edu" /></div>
+            <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" id="forgot-email" placeholder="you@email.com" /></div>
             <button class="btn btn-blue btn-w-full" id="forgot-btn" onclick="handleForgotPassword()">Send Reset Link</button>
             <div id="forgot-status"></div>
             <div class="auth-footer"><a class="auth-link" href="#login" onclick="navigate('login');return false">Back to Login</a></div>
