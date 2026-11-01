@@ -314,16 +314,52 @@ async function handleLogin() {
 }
 
 async function handleRegister() {
-  const email=document.getElementById('reg-email').value.trim(), username=document.getElementById('reg-username').value.trim();
-  const password=document.getElementById('reg-password').value, confirm=document.getElementById('reg-confirm').value;
-  if (password!==confirm) { setStatus('reg-status','Passwords do not match.',false); return; }
-  const btn=document.getElementById('reg-btn'); btn.textContent='Registering...'; btn.disabled=true; clearStatus('reg-status');
+  const email = document.getElementById('reg-email').value.trim();
+  const username = document.getElementById('reg-username').value.trim();
+  const password = document.getElementById('reg-password').value;
+  const confirm = document.getElementById('reg-confirm').value;
+
+  if (!email) {
+    setStatus('reg-status', 'Please enter your email address.', false);
+    return;
+  }
+  if (!email.includes('@') || email.length < 5) {
+    setStatus('reg-status', 'Please enter a valid email address (e.g. name@example.com).', false);
+    return;
+  }
+  if (!username || username.length < 3) {
+    setStatus('reg-status', 'Username must be at least 3 characters long.', false);
+    return;
+  }
+  if (!password) {
+    setStatus('reg-status', 'Please enter a password.', false);
+    return;
+  }
+  if (password.length < 6) {
+    setStatus('reg-status', 'Password must be at least 6 characters long.', false);
+    return;
+  }
+  if (password !== confirm) {
+    setStatus('reg-status', 'Passwords do not match. Please re-type password.', false);
+    return;
+  }
+
+  const btn = document.getElementById('reg-btn');
+  btn.textContent = 'Registering...';
+  btn.disabled = true;
+  clearStatus('reg-status');
   try {
-    await apiFetch('/api/auth/signup',{method:'POST',body:JSON.stringify({email,password,username})});
-    setStatus('reg-status','Registration successful! Redirecting...',true); showToast('Registration successful!','success');
-    setTimeout(()=>navigate('login'),1500);
-  } catch(err) { setStatus('reg-status',err.message||'Registration failed',false); }
-  finally { btn.textContent='Register'; btn.disabled=false; }
+    await apiFetch('/api/auth/signup', { method: 'POST', body: JSON.stringify({ email, password, username }) });
+    setStatus('reg-status', 'Registration successful! Redirecting to login...', true);
+    showToast('Registration successful!', 'success');
+    setTimeout(() => navigate('login'), 1500);
+  } catch(err) {
+    setStatus('reg-status', err.message || 'Registration failed. Please check your details.', false);
+    showToast(err.message || 'Registration failed', 'error');
+  } finally {
+    btn.textContent = 'Register';
+    btn.disabled = false;
+  }
 }
 
 async function handleForgotPassword() {

@@ -199,14 +199,20 @@ router.post('/reset-password', async (req, res) => {
 router.post("/signup", async (req, res) => {
   try {
     const { email, password, username } = req.body;
-    if (!email || !password || password.length < 6) {
-      return res.status(400).json({ error: "Invalid email or password" });
+    if (!email || !email.includes('@') || email.trim().length < 5) {
+      return res.status(400).json({ error: "Please enter a valid email address" });
     }
-    if (username && username.length < 3) {
-      return res.status(400).json({ error: "Invalid username" });
+    if (!username || username.trim().length < 3) {
+      return res.status(400).json({ error: "Username must be at least 3 characters long" });
     }
-    const existing = await User.findOne({ email });
-    if (existing) return res.status(400).json({ error: "Email exists" });
+    if (!password) {
+      return res.status(400).json({ error: "Password is required" });
+    }
+    if (password.length < 6) {
+      return res.status(400).json({ error: "Password must be at least 6 characters long" });
+    }
+    const existing = await User.findOne({ email: email.toLowerCase().trim() });
+    if (existing) return res.status(400).json({ error: "An account with this email already exists" });
 
     const hash = await bcrypt.hash(password, 10);
     const role = checkIsAdmin({ email }) ? 'admin' : 'user';
@@ -240,10 +246,10 @@ router.post("/login", async (req, res) => {
     // Try username if not found by email
     user = await User.findOne({ username: email });
   }
-  if (!user) return res.status(400).json({ error: "Invalid credentials" });
+  if (!user) return res.status(400).json({ error: "No account found with this email or username" });
 
   const match = await bcrypt.compare(password, user.password);
-  if (!match) return res.status(400).json({ error: "Invalid credentials" });
+  if (!match) return res.status(400).json({ error: "Incorrect password" });
 
   const isAdminUser = checkIsAdmin(user);
   const role = isAdminUser ? 'admin' : (user.role || 'user');
